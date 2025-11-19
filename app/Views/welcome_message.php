@@ -1,206 +1,400 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome to CodeIgniter 4!</title>
-    <meta name="description" content="The small framework with powerful features">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+<?= $this->extend('layouts/main') ?><?= $this->extend('layouts/main') ?>
 
-    <!-- STYLES -->
 
-    <style {csp-style-nonce}>
-        * {
-            transition: background-color 300ms ease, color 300ms ease;
-        }
-        *:focus {
-            background-color: rgba(221, 72, 20, .2);
-            outline: none;
-        }
-        html, body {
-            color: rgba(33, 37, 41, 1);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            font-size: 16px;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
-        header {
-            background-color: rgba(247, 248, 249, 1);
-            padding: .4rem 0 0;
-        }
-        .menu {
-            padding: .4rem 2rem;
-        }
-        header ul {
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            list-style-type: none;
-            margin: 0;
-            overflow: hidden;
-            padding: 0;
-            text-align: right;
-        }
-        header li {
-            display: inline-block;
-        }
-        header li a {
-            border-radius: 5px;
-            color: rgba(0, 0, 0, .5);
+
+<?= $this->section('content') ?><?= $this->section('content') ?>
+
+<!-- Hero Section --><!-- Hero Section -->
+
+<div class="row align-items-center py-5"><div class="row align-items-center py-5">
+
+    <div class="col-lg-6">    <div class="col-lg-6">
+
+        <div class="mb-4">        <div class="mb-4">
+
+            <h1 class="display-4 fw-bold mb-3">Welcome to <span class="text-primary">BS DIGIHUB</span></h1>            <h1 class="display-4 fw-bold mb-3">Welcome to <span class="text-primary">BS DIGIHUB</span></h1>
+
+            <p class="lead text-muted mb-4">Your trusted digital partner for automotive parts and accessories management. Streamline your inventory, manage compatibility, and grow your business with our comprehensive platform.</p>            <p class="lead text-muted mb-4">Your trusted digital partner for automotive parts and accessories management. Streamline your inventory, manage compatibility, and grow your business with our comprehensive platform.</p>
+
+                        
+
+            <div class="d-flex gap-3 mb-4">            <div class="d-flex gap-3 mb-4">
+
+                <a href="<?= base_url('dashboard') ?>" class="btn btn-primary btn-lg">                <a href="<?= base_url('dashboard') ?>" class="btn btn-primary btn-lg">
+
+                    <i class="bi bi-speedometer2"></i> Go to Dashboard                    <i class="bi bi-speedometer2"></i> Go to Dashboard
+
+                </a>                </a>
+
+                <a href="#features" class="btn btn-outline-primary btn-lg">                <a href="#features" class="btn btn-outline-primary btn-lg">
+
+                    <i class="bi bi-info-circle"></i> Learn More                    <i class="bi bi-info-circle"></i> Learn More
+
+                </a>                </a>
+
+            </div>            </div>
+
+                        
+
+            <div class="d-flex align-items-center text-muted">            <div class="d-flex align-items-center text-muted">
+
+                <i class="bi bi-shield-check text-success me-2"></i>                <i class="bi bi-shield-check text-success me-2"></i>
+
+                <small>Secure, reliable, and built for automotive professionals</small>                <small>Secure, reliable, and built for automotive professionals</small>
+
+            </div>            </div>
+
+        </div>        </div>
+
+    </div>    </div>
+
+    <div class="col-lg-6 text-center">    <div class="col-lg-6 text-center">
+
+        <div class="position-relative">        <div class="position-relative">
+
+            <div class="bg-primary bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center"             <div class="bg-primary bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center" 
+
+                 style="width: 300px; height: 300px;">                 style="width: 300px; height: 300px;">
+
+                <i class="bi bi-shop text-white" style="font-size: 6rem;"></i>                <i class="bi bi-shop text-white" style="font-size: 6rem;"></i>
+
+            </div>            </div>
+
+            <div class="position-absolute top-0 start-0 translate-middle">            <div class="position-absolute top-0 start-0 translate-middle">
+
+                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center text-white"                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center text-white"
+
+                     style="width: 80px; height: 80px;">                     style="width: 80px; height: 80px;">
+
+                    <i class="bi bi-car-front" style="font-size: 2rem;"></i>                    <i class="bi bi-car-front" style="font-size: 2rem;"></i>
+
+                </div>                </div>
+
+            </div>            </div>
+
+            <div class="position-absolute bottom-0 end-0 translate-middle">            <div class="position-absolute bottom-0 end-0 translate-middle">
+
+                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center text-white"                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center text-white"
+
+                     style="width: 80px; height: 80px;">                     style="width: 80px; height: 80px;">
+
+                    <i class="bi bi-gear-fill" style="font-size: 2rem;"></i>                    <i class="bi bi-gear-fill" style="font-size: 2rem;"></i>
+
+                </div>                </div>
+
+            </div>            </div>
+
+        </div>        </div>
+
+    </div>    </div>
+
+</div></div>
+
             display: block;
-            height: 44px;
-            text-decoration: none;
+
+<!-- Features Section -->            height: 44px;
+
+<section id="features" class="py-5">            text-decoration: none;
+
+    <div class="text-center mb-5">        }
+
+        <h2 class="h3 fw-bold mb-3">Powerful Features for Your Business</h2>        header li.menu-item a {
+
+        <p class="text-muted">Everything you need to manage your automotive parts business efficiently</p>            border-radius: 5px;
+
+    </div>            margin: 5px 0;
+
+                height: 38px;
+
+    <div class="row g-4">            line-height: 36px;
+
+        <div class="col-lg-4 col-md-6">            padding: .4rem .65rem;
+
+            <div class="card h-100 border-0 shadow-sm">            text-align: center;
+
+                <div class="card-body text-center p-4">        }
+
+                    <div class="bg-primary bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3"        header li.menu-item a:hover,
+
+                         style="width: 60px; height: 60px;">        header li.menu-item a:focus {
+
+                        <i class="bi bi-box-seam fs-4"></i>            background-color: rgba(221, 72, 20, .2);
+
+                    </div>            color: rgba(221, 72, 20, 1);
+
+                    <h5 class="card-title">Product Management</h5>        }
+
+                    <p class="card-text text-muted">Efficiently organize and manage your entire automotive parts inventory with detailed categorization and specifications.</p>        header .logo {
+
+                </div>            float: left;
+
+            </div>            height: 44px;
+
+        </div>            padding: .4rem .5rem;
+
+                }
+
+        <div class="col-lg-4 col-md-6">        header .menu-toggle {
+
+            <div class="card h-100 border-0 shadow-sm">            display: none;
+
+                <div class="card-body text-center p-4">            float: right;
+
+                    <div class="bg-success bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3"            font-size: 2rem;
+
+                         style="width: 60px; height: 60px;">            font-weight: bold;
+
+                        <i class="bi bi-car-front fs-4"></i>        }
+
+                    </div>        header .menu-toggle button {
+
+                    <h5 class="card-title">Vehicle Compatibility</h5>            background-color: rgba(221, 72, 20, .6);
+
+                    <p class="card-text text-muted">Maintain accurate vehicle compatibility data to help customers find the right parts for their specific car models.</p>            border: none;
+
+                </div>            border-radius: 3px;
+
+            </div>            color: rgba(255, 255, 255, 1);
+
+        </div>            cursor: pointer;
+
+                    font: inherit;
+
+        <div class="col-lg-4 col-md-6">            font-size: 1.3rem;
+
+            <div class="card h-100 border-0 shadow-sm">            height: 36px;
+
+                <div class="card-body text-center p-4">            padding: 0;
+
+                    <div class="bg-info bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3"            margin: 11px 0;
+
+                         style="width: 60px; height: 60px;">            overflow: visible;
+
+                        <i class="bi bi-graph-up fs-4"></i>            width: 40px;
+
+                    </div>        }
+
+                    <h5 class="card-title">Analytics & Reports</h5>        header .menu-toggle button:hover,
+
+                    <p class="card-text text-muted">Track performance with comprehensive analytics and generate detailed reports to make informed business decisions.</p>        header .menu-toggle button:focus {
+
+                </div>            background-color: rgba(221, 72, 20, .8);
+
+            </div>            color: rgba(255, 255, 255, .8);
+
+        </div>        }
+
+                header .heroe {
+
+        <div class="col-lg-4 col-md-6">            margin: 0 auto;
+
+            <div class="card h-100 border-0 shadow-sm">            max-width: 1100px;
+
+                <div class="card-body text-center p-4">            padding: 1rem 1.75rem 1.75rem 1.75rem;
+
+                    <div class="bg-warning bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3"        }
+
+                         style="width: 60px; height: 60px;">        header .heroe h1 {
+
+                        <i class="bi bi-people fs-4"></i>            font-size: 2.5rem;
+
+                    </div>            font-weight: 500;
+
+                    <h5 class="card-title">Supplier Network</h5>        }
+
+                    <p class="card-text text-muted">Build and manage relationships with suppliers, track orders, and maintain competitive pricing strategies.</p>        header .heroe h2 {
+
+                </div>            font-size: 1.5rem;
+
+            </div>            font-weight: 300;
+
+        </div>        }
+
+                section {
+
+        <div class="col-lg-4 col-md-6">            margin: 0 auto;
+
+            <div class="card h-100 border-0 shadow-sm">            max-width: 1100px;
+
+                <div class="card-body text-center p-4">            padding: 2.5rem 1.75rem 3.5rem 1.75rem;
+
+                    <div class="bg-danger bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3"        }
+
+                         style="width: 60px; height: 60px;">        section h1 {
+
+                        <i class="bi bi-shield-check fs-4"></i>            margin-bottom: 2.5rem;
+
+                    </div>        }
+
+                    <h5 class="card-title">Secure Platform</h5>        section h2 {
+
+                    <p class="card-text text-muted">Your data is protected with industry-standard security measures and regular backups for peace of mind.</p>            font-size: 120%;
+
+                </div>            line-height: 2.5rem;
+
+            </div>            padding-top: 1.5rem;
+
+        </div>        }
+
+                section pre {
+
+        <div class="col-lg-4 col-md-6">            background-color: rgba(247, 248, 249, 1);
+
+            <div class="card h-100 border-0 shadow-sm">            border: 1px solid rgba(242, 242, 242, 1);
+
+                <div class="card-body text-center p-4">            display: block;
+
+                    <div class="bg-secondary bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3"            font-size: .9rem;
+
+                         style="width: 60px; height: 60px;">            margin: 2rem 0;
+
+                        <i class="bi bi-lightning fs-4"></i>            padding: 1rem 1.5rem;
+
+                    </div>            white-space: pre-wrap;
+
+                    <h5 class="card-title">Fast & Reliable</h5>            word-break: break-all;
+
+                    <p class="card-text text-muted">Built on modern technology stack ensuring fast performance and reliable uptime for your business operations.</p>        }
+
+                </div>        section code {
+
+            </div>            display: block;
+
+        </div>        }
+
+    </div>        section a {
+
+</section>            color: rgba(221, 72, 20, 1);
+
         }
-        header li.menu-item a {
-            border-radius: 5px;
-            margin: 5px 0;
-            height: 38px;
-            line-height: 36px;
-            padding: .4rem .65rem;
-            text-align: center;
-        }
-        header li.menu-item a:hover,
-        header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .2);
-            color: rgba(221, 72, 20, 1);
-        }
-        header .logo {
-            float: left;
-            height: 44px;
-            padding: .4rem .5rem;
-        }
-        header .menu-toggle {
-            display: none;
-            float: right;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        header .menu-toggle button {
-            background-color: rgba(221, 72, 20, .6);
-            border: none;
-            border-radius: 3px;
-            color: rgba(255, 255, 255, 1);
-            cursor: pointer;
-            font: inherit;
-            font-size: 1.3rem;
-            height: 36px;
-            padding: 0;
-            margin: 11px 0;
-            overflow: visible;
-            width: 40px;
-        }
-        header .menu-toggle button:hover,
-        header .menu-toggle button:focus {
-            background-color: rgba(221, 72, 20, .8);
-            color: rgba(255, 255, 255, .8);
-        }
-        header .heroe {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 1rem 1.75rem 1.75rem 1.75rem;
-        }
-        header .heroe h1 {
-            font-size: 2.5rem;
-            font-weight: 500;
-        }
-        header .heroe h2 {
-            font-size: 1.5rem;
-            font-weight: 300;
-        }
-        section {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 2.5rem 1.75rem 3.5rem 1.75rem;
-        }
-        section h1 {
-            margin-bottom: 2.5rem;
-        }
-        section h2 {
-            font-size: 120%;
-            line-height: 2.5rem;
-            padding-top: 1.5rem;
-        }
-        section pre {
-            background-color: rgba(247, 248, 249, 1);
-            border: 1px solid rgba(242, 242, 242, 1);
-            display: block;
-            font-size: .9rem;
-            margin: 2rem 0;
-            padding: 1rem 1.5rem;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        section code {
-            display: block;
-        }
-        section a {
-            color: rgba(221, 72, 20, 1);
-        }
-        section svg {
-            margin-bottom: -5px;
-            margin-right: 5px;
-            width: 25px;
-        }
-        .further {
-            background-color: rgba(247, 248, 249, 1);
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            border-top: 1px solid rgba(242, 242, 242, 1);
-        }
-        .further h2:first-of-type {
-            padding-top: 0;
-        }
-        .svg-stroke {
-            fill: none;
-            stroke: #000;
-            stroke-width: 32px;
-        }
-        footer {
-            background-color: rgba(221, 72, 20, .8);
-            text-align: center;
-        }
-        footer .environment {
-            color: rgba(255, 255, 255, 1);
-            padding: 2rem 1.75rem;
-        }
-        footer .copyrights {
-            background-color: rgba(62, 62, 62, 1);
-            color: rgba(200, 200, 200, 1);
-            padding: .25rem 1.75rem;
-        }
-        @media (max-width: 629px) {
+
+<!-- Quick Start Section -->        section svg {
+
+<section class="py-5 bg-light rounded">            margin-bottom: -5px;
+
+    <div class="text-center mb-4">            margin-right: 5px;
+
+        <h3 class="fw-bold mb-3">Ready to Get Started?</h3>            width: 25px;
+
+        <p class="text-muted">Jump right in and start managing your automotive business today</p>        }
+
+    </div>        .further {
+
+                background-color: rgba(247, 248, 249, 1);
+
+    <div class="row justify-content-center">            border-bottom: 1px solid rgba(242, 242, 242, 1);
+
+        <div class="col-md-8">            border-top: 1px solid rgba(242, 242, 242, 1);
+
+            <div class="row g-3">        }
+
+                <div class="col-md-4 text-center">        .further h2:first-of-type {
+
+                    <a href="<?= base_url('dashboard') ?>" class="btn btn-primary w-100 py-3">            padding-top: 0;
+
+                        <i class="bi bi-speedometer2 display-6 d-block mb-2"></i>        }
+
+                        <span>Dashboard</span>        .svg-stroke {
+
+                    </a>            fill: none;
+
+                </div>            stroke: #000;
+
+                <div class="col-md-4 text-center">            stroke-width: 32px;
+
+                    <a href="<?= base_url('car-models') ?>" class="btn btn-success w-100 py-3">        }
+
+                        <i class="bi bi-car-front display-6 d-block mb-2"></i>        footer {
+
+                        <span>Car Models</span>            background-color: rgba(221, 72, 20, .8);
+
+                    </a>            text-align: center;
+
+                </div>        }
+
+                <div class="col-md-4 text-center">        footer .environment {
+
+                    <a href="<?= base_url('products') ?>" class="btn btn-info w-100 py-3">            color: rgba(255, 255, 255, 1);
+
+                        <i class="bi bi-box-seam display-6 d-block mb-2"></i>            padding: 2rem 1.75rem;
+
+                        <span>Products</span>        }
+
+                    </a>        footer .copyrights {
+
+                </div>            background-color: rgba(62, 62, 62, 1);
+
+            </div>            color: rgba(200, 200, 200, 1);
+
+        </div>            padding: .25rem 1.75rem;
+
+    </div>        }
+
+</section>        @media (max-width: 629px) {
+
             header ul {
-                padding: 0;
-            }
-            header .menu-toggle {
-                padding: 0 1rem;
-            }
-            header .menu-item {
-                background-color: rgba(244, 245, 246, 1);
-                border-top: 1px solid rgba(242, 242, 242, 1);
-                margin: 0 15px;
-                width: calc(100% - 30px);
-            }
-            header .menu-toggle {
-                display: block;
-            }
-            header .hidden {
-                display: none;
-            }
-            header li.menu-item a {
-                background-color: rgba(221, 72, 20, .1);
-            }
-            header li.menu-item a:hover,
-            header li.menu-item a:focus {
-                background-color: rgba(221, 72, 20, .7);
-                color: rgba(255, 255, 255, .8);
-            }
-        }
-    </style>
-</head>
-<body>
 
-<!-- HEADER: MENU + HEROE SECTION -->
+<!-- Stats Section -->                padding: 0;
+
+<section class="py-5">            }
+
+    <div class="row text-center g-4">            header .menu-toggle {
+
+        <div class="col-md-3">                padding: 0 1rem;
+
+            <div class="p-3">            }
+
+                <div class="display-4 fw-bold text-primary mb-2">100%</div>            header .menu-item {
+
+                <div class="text-muted">Secure</div>                background-color: rgba(244, 245, 246, 1);
+
+            </div>                border-top: 1px solid rgba(242, 242, 242, 1);
+
+        </div>                margin: 0 15px;
+
+        <div class="col-md-3">                width: calc(100% - 30px);
+
+            <div class="p-3">            }
+
+                <div class="display-4 fw-bold text-success mb-2">24/7</div>            header .menu-toggle {
+
+                <div class="text-muted">Available</div>                display: block;
+
+            </div>            }
+
+        </div>            header .hidden {
+
+        <div class="col-md-3">                display: none;
+
+            <div class="p-3">            }
+
+                <div class="display-4 fw-bold text-info mb-2">Fast</div>            header li.menu-item a {
+
+                <div class="text-muted">Performance</div>                background-color: rgba(221, 72, 20, .1);
+
+            </div>            }
+
+        </div>            header li.menu-item a:hover,
+
+        <div class="col-md-3">            header li.menu-item a:focus {
+
+            <div class="p-3">                background-color: rgba(221, 72, 20, .7);
+
+                <div class="display-4 fw-bold text-warning mb-2">Easy</div>                color: rgba(255, 255, 255, .8);
+
+                <div class="text-muted">To Use</div>            }
+
+            </div>        }
+
+        </div>    </style>
+
+    </div></head>
+
+</section><body>
+
+
+
+<?= $this->endSection() ?><!-- HEADER: MENU + HEROE SECTION -->
 <header>
 
     <div class="menu">
