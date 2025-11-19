@@ -97,13 +97,13 @@
                         </a>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <a href="#" class="btn btn-info w-100">
+                        <a href="<?= base_url('suppliers/create') ?>" class="btn btn-info w-100">
                             <i class="bi bi-person-plus"></i>
                             <div class="mt-1">Add Supplier</div>
                         </a>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <a href="#" class="btn btn-warning w-100">
+                        <a href="<?= base_url('reports') ?>" class="btn btn-warning w-100">
                             <i class="bi bi-graph-up"></i>
                             <div class="mt-1">View Reports</div>
                         </a>
@@ -132,8 +132,8 @@
                             <div class="list-group-item px-0 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="mb-0"><?= esc($product['name'] ?? 'Product Name') ?></h6>
-                                        <small class="text-muted"><?= esc($product['category'] ?? 'Category') ?></small>
+                                        <h6 class="mb-0"><?= esc($product['product_name']) ?></h6>
+                                        <small class="text-muted"><?= esc($product['category_name'] ?? 'Uncategorized') ?></small>
                                     </div>
                                     <div class="text-end">
                                         <div class="badge bg-success">In Stock</div>

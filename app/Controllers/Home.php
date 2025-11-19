@@ -22,13 +22,14 @@ class Home extends BaseController
         // Load models
         $carModelModel = new CarModelModel();
         $productModel = model('ProductModel', false);
-        
+        $supplierModel = model('SupplierModel', false);
+
         // Get statistics
         $stats = [
             'total_car_models' => $carModelModel->countAll(),
             'total_products' => $productModel ? $productModel->countAll() : 0,
-            'total_suppliers' => 0, // Placeholder for when supplier model is created
-            'low_stock_items' => 0 // Placeholder for low stock functionality
+            'total_suppliers' => $supplierModel ? $supplierModel->countAll() : 0,
+            'low_stock_items' => $productModel ? $productModel->where('quantity <=', 5)->where('quantity >', 0)->countAllResults() : 0
         ];
         
         // Get recent data
