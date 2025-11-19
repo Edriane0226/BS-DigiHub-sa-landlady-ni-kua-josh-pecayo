@@ -28,22 +28,30 @@ $currentPage = uri_string();
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= str_contains($currentPage, 'car-models') || str_contains($currentPage, 'products') ? 'active' : '' ?>" 
+                    <a class="nav-link dropdown-toggle <?= str_contains($currentPage, 'car-models') || str_contains($currentPage, 'products') || str_contains($currentPage, 'suppliers') ? 'active' : '' ?>" 
                        href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                         <i class="bi bi-gear"></i> Manage
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= base_url('car-models') ?>">
-                            <i class="bi bi-car-front"></i> Car Models
-                        </a></li>
                         <li><a class="dropdown-item" href="<?= base_url('products') ?>">
                             <i class="bi bi-box"></i> Products
                         </a></li>
+                        <li><a class="dropdown-item" href="<?= base_url('car-models') ?>">
+                            <i class="bi bi-car-front"></i> Car Models
+                        </a></li>
+                        <li><a class="dropdown-item" href="<?= base_url('suppliers') ?>">
+                            <i class="bi bi-building"></i> Suppliers
+                        </a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#">
-                            <i class="bi bi-people"></i> Suppliers
+                            <i class="bi bi-tags"></i> Categories
                         </a></li>
                     </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= str_contains($currentPage, 'reports') ? 'active' : '' ?>" href="<?= base_url('reports') ?>">
+                        <i class="bi bi-graph-up"></i> Reports
+                    </a>
                 </li>
             </ul>
             

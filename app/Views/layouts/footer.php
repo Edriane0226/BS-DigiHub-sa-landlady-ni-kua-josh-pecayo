@@ -21,7 +21,9 @@
                     <li><a href="<?= base_url() ?>" class="text-light text-decoration-none small">Home</a></li>
                     <li><a href="<?= base_url('dashboard') ?>" class="text-light text-decoration-none small">Dashboard</a></li>
                     <li><a href="<?= base_url('products') ?>" class="text-light text-decoration-none small">Products</a></li>
+                    <li><a href="<?= base_url('suppliers') ?>" class="text-light text-decoration-none small">Suppliers</a></li>
                     <li><a href="<?= base_url('car-models') ?>" class="text-light text-decoration-none small">Car Models</a></li>
+                    <li><a href="<?= base_url('reports') ?>" class="text-light text-decoration-none small">Reports</a></li>
                 </ul>
             </div>
             
