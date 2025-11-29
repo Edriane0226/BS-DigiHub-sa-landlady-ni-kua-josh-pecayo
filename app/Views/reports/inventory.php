@@ -266,7 +266,7 @@
                                         </div>
                                         <div>
                                             <div class="fw-semibold"><?= esc($product['product_name']) ?></div>
-                                            <div class="small text-muted">SKU: <?= esc($product['sku']) ?></div>
+                                            <div class="small text-muted">EAN-13: <?= esc($product['ean13']) ?></div>
                                         </div>
                                     </div>
                                 </td>
@@ -318,7 +318,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <div class="fw-semibold small"><?= esc($item['product_name']) ?></div>
-                                    <div class="text-muted small">SKU: <?= esc($item['sku']) ?></div>
+                                    <div class="text-muted small">EAN-13: <?= esc($item['ean13']) ?></div>
                                 </div>
                                 <div class="text-end">
                                     <?php if ($item['quantity'] == 0): ?>

@@ -23,7 +23,7 @@ return $this->select('product_compatibility.*, car_models.brand, car_models.mode
 
 public function getProductsForCarModel($carModelId)
 {
-return $this->select('product_compatibility.*, products.product_name, products.sku')
+return $this->select('product_compatibility.*, products.product_name, products.ean13')
 ->join('products', 'products.id = product_compatibility.product_id')
 ->where('product_compatibility.car_model_id', $carModelId)
 ->findAll();

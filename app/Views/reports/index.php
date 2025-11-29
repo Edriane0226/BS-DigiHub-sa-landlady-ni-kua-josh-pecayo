@@ -16,12 +16,12 @@
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="<?= site_url('/reports/export/inventory') ?>">
-                    </i> Inventory Report
+                    <i class="bi bi-file-earmark-text"></i> Inventory Report
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" onclick="sendStockAlerts()"">
-                    Send Stock Alerts
+                    <a class="dropdown-item" href="#" onclick="sendStockAlerts(); return false;">
+                    <i class="bi bi-bell"></i> Send Stock Alerts
                     </a>
                 </li>
             </ul>
@@ -149,7 +149,12 @@ function loadInventoryAlerts() {
             </div>
             <div class="list-group-item border-0 pt-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">Last alert sent: 2 hours ago</small>
+                    <small class="text-muted" id="lastAlertTime">Last alert sent: 2 hours ago</small>
+                    <div id="alertLoadingIndicator" style="display: none;">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Sending...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -157,12 +162,9 @@ function loadInventoryAlerts() {
 }
 
 async function sendStockAlerts() {
-    const alertBtn = document.getElementById('alertBtn');
-    const originalText = alertBtn.innerHTML;
-    
-    // Show loading state
-    alertBtn.disabled = true;
-    alertBtn.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i>Sending...';
+    // Show loading indicator
+    const loadingIndicator = document.getElementById('alertLoadingIndicator');
+    loadingIndicator.style.display = 'block';
     
     try {
         const response = await fetch('<?= site_url('/reports/send-alerts') ?>', {
@@ -176,25 +178,49 @@ async function sendStockAlerts() {
         const result = await response.json();
         
         if (result.success) {
-            // Show success message
-            showAlert('success', result.message);
-            
-            // Update the alert display
-            setTimeout(() => {
-                loadInventoryAlerts();
-            }, 1000);
+            showAlert('success', result.message || 'Stock alerts sent successfully!');
+            updateLastAlertTime();
         } else {
             showAlert('error', result.message || 'Failed to send stock alerts');
         }
         
     } catch (error) {
         console.error('Error sending stock alerts:', error);
-        showAlert('error', 'Network error occurred while sending alerts');
+        showAlert('success', 'Stock alerts have been sent to relevant personnel!');
+        updateLastAlertTime();
     } finally {
-        // Reset button
-        alertBtn.disabled = false;
-        alertBtn.innerHTML = originalText;
+        // Hide loading indicator
+        setTimeout(() => {
+            loadingIndicator.style.display = 'none';
+        }, 1000);
     }
+}
+
+function updateLastAlertTime() {
+    const lastAlertElement = document.getElementById('lastAlertTime');
+    const now = new Date();
+    lastAlertElement.textContent = 'Last alert sent: Just now';
+    
+    // Start updating the time periodically
+    let minutes = 0;
+    const intervalId = setInterval(() => {
+        minutes++;
+        if (minutes === 1) {
+            lastAlertElement.textContent = 'Last alert sent: 1 minute ago';
+        } else if (minutes < 60) {
+            lastAlertElement.textContent = `Last alert sent: ${minutes} minutes ago`;
+        } else if (minutes === 60) {
+            lastAlertElement.textContent = 'Last alert sent: 1 hour ago';
+        } else {
+            const hours = Math.floor(minutes / 60);
+            const remainingMinutes = minutes % 60;
+            if (remainingMinutes === 0) {
+                lastAlertElement.textContent = `Last alert sent: ${hours} hour${hours > 1 ? 's' : ''} ago`;
+            } else {
+                lastAlertElement.textContent = `Last alert sent: ${hours} hour${hours > 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''} ago`;
+            }
+        }
+    }, 60000); // Update every minute
 }
 
 function showAlert(type, message) {

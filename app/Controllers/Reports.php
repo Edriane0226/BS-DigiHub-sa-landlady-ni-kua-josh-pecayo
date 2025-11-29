@@ -161,7 +161,7 @@ class Reports extends BaseController
         $csv .= "Total Damage/Loss," . $totalDamage . "\n\n";
         
         $csv .= "DETAILED PRODUCT INVENTORY\n";
-        $csv .= "Product Name,SKU,Category,Type,Price,Current Stock,Total Value,Status\n";
+        $csv .= "Product Name,EAN-13,Category,Type,Price,Current Stock,Total Value,Status\n";
         
         foreach ($products as $product) {
             $status = 'In Stock';
@@ -174,7 +174,7 @@ class Reports extends BaseController
             $csv .= sprintf(
                 '"%s","%s","%s","%s",₱%s,%s,₱%s,"%s"' . "\n",
                 $product['product_name'],
-                $product['sku'],
+                $product['ean13'],
                 $product['category_name'] ?? 'Uncategorized',
                 ucfirst($product['product_type']),
                 number_format($product['price'], 2),

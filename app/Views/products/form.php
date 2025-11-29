@@ -47,15 +47,17 @@
                                     
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
-                                            <label for="sku" class="form-label required">SKU</label>
+                                            <label for="ean13" class="form-label required">EAN-13 Barcode</label>
                                             <input type="text" 
-                                                   name="sku" 
-                                                   id="sku"
+                                                   name="ean13" 
+                                                   id="ean13"
                                                    class="form-control" 
-                                                   value="<?= old('sku') ?>"
-                                                   placeholder="e.g., BRK-PAD-001"
+                                                   value="<?= old('ean13') ?>"
+                                                   placeholder="e.g., 1234567890123"
+                                                   pattern="[0-9]{13}"
+                                                   maxlength="13"
                                                    required>
-                                            <div class="form-text">Unique product identifier</div>
+                                            <div class="form-text">13-digit EAN barcode</div>
                                         </div>
                                         
                                         <div class="col-md-4 mb-3">
@@ -148,8 +150,8 @@
                                         <div id="totalValue" class="fw-semibold text-success">$0.00</div>
                                     </div>
                                     <div>
-                                        <small class="text-muted">SKU Validation:</small>
-                                        <div id="skuValidation" class="fw-semibold">
+                                        <small class="text-muted">EAN-13 Validation:</small>
+                                        <div id="ean13Validation" class="fw-semibold">
                                             <span class="badge bg-secondary">Not Set</span>
                                         </div>
                                     </div>
@@ -181,8 +183,8 @@
                     <div class="col-md-6">
                         <ul class="small mb-0">
                             <li>Use descriptive product names that customers can easily search for</li>
-                            <li>SKUs should be unique and follow a consistent naming convention</li>
-                            <li>Include accurate product names and SKUs for easy identification</li>
+                            <li>EAN-13 barcodes should be unique 13-digit numbers</li>
+                            <li>Include accurate product names and EAN-13 codes for easy identification</li>
                         </ul>
                     </div>
                     <div class="col-md-6">
@@ -205,7 +207,7 @@
 }
 
 #stockStatus .badge,
-#skuValidation .badge {
+#ean13Validation .badge {
     transition: all 0.3s ease;
 }
 </style>
@@ -214,7 +216,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const quantityInput = document.getElementById('quantity');
     const priceInput = document.getElementById('price');
-    const skuInput = document.getElementById('sku');
+    const ean13Input = document.getElementById('ean13');
     
     // Update stock status based on quantity
     function updateStockStatus() {
@@ -239,17 +241,17 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('totalValue').textContent = '$' + total.toFixed(2);
     }
     
-    // Validate SKU format
-    function validateSKU() {
-        const sku = skuInput.value.trim();
-        const validationElement = document.getElementById('skuValidation');
+    // Validate EAN-13 format
+    function validateEAN13() {
+        const ean13 = ean13Input.value.trim();
+        const validationElement = document.getElementById('ean13Validation');
         
-        if (!sku) {
+        if (!ean13) {
             validationElement.innerHTML = '<span class="badge bg-secondary">Not Set</span>';
-        } else if (sku.length < 3) {
-            validationElement.innerHTML = '<span class="badge bg-danger">Too Short</span>';
-        } else if (!/^[A-Z0-9\-_]+$/i.test(sku)) {
-            validationElement.innerHTML = '<span class="badge bg-warning">Invalid Format</span>';
+        } else if (ean13.length !== 13) {
+            validationElement.innerHTML = '<span class="badge bg-danger">Must be 13 digits</span>';
+        } else if (!/^[0-9]{13}$/.test(ean13)) {
+            validationElement.innerHTML = '<span class="badge bg-warning">Numbers only</span>';
         } else {
             validationElement.innerHTML = '<span class="badge bg-success">Valid</span>';
         }
@@ -262,22 +264,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     priceInput.addEventListener('input', updateTotalValue);
-    skuInput.addEventListener('input', validateSKU);
+    ean13Input.addEventListener('input', validateEAN13);
     
     // Form validation
     document.getElementById('productForm').addEventListener('submit', function(e) {
-        const sku = skuInput.value.trim();
-        if (sku.length < 3) {
+        const ean13 = ean13Input.value.trim();
+        if (ean13.length !== 13) {
             e.preventDefault();
-            alert('SKU must be at least 3 characters long');
-            skuInput.focus();
+            alert('EAN-13 must be exactly 13 digits');
+            ean13Input.focus();
             return;
         }
         
-        if (!/^[A-Z0-9\-_]+$/i.test(sku)) {
+        if (!/^[0-9]{13}$/.test(ean13)) {
             e.preventDefault();
-            alert('SKU can only contain letters, numbers, hyphens, and underscores');
-            skuInput.focus();
+            alert('EAN-13 can only contain numbers');
+            ean13Input.focus();
             return;
         }
     });
@@ -285,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize
     updateStockStatus();
     updateTotalValue();
-    validateSKU();
+    validateEAN13();
 });
 </script>
 

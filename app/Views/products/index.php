@@ -86,7 +86,7 @@
             <div class="col-md-4">
                 <label class="form-label small">Search Products</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search by name, SKU..." 
+                    <input type="text" class="form-control" placeholder="Search by name, Barcode..." 
                            id="searchInput" name="search" value="<?= isset($filters['search']) ? esc($filters['search']) : '' ?>">
                     <button class="btn btn-outline-secondary" type="button" onclick="performSearch()">
                         <i class="bi bi-search"></i>
@@ -145,29 +145,19 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th width="8%">ID</th>
-                            <th width="25%">Product Details</th>
-                            <th width="15%">Category</th>
+                            <th width="18%">Product Details</th>
+                            <th width="12%">Category</th>
                             <th width="10%">Type</th>
-                            <th width="12%">SKU</th>
+                            <th width="12%">Barcode</th>
                             <th width="10%">Price</th>
                             <th width="8%">Stock</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($products as $p): ?>
-                        <tr>
-                            <td>
-                                <span class="badge bg-secondary"><?= $p['id'] ?></span>
-                            </td>
+                        <tr class="product-row" data-product-id="<?= $p['id'] ?>" style="cursor: pointer;">
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="me-3">
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                             style="width: 40px; height: 40px;">
-                                            <i class="bi bi-box text-muted"></i>
-                                        </div>
-                                    </div>
                                     <div>
                                         <div class="fw-semibold"><?= esc($p['product_name']) ?></div>
                                     </div>
@@ -185,7 +175,7 @@
                                 </span>
                             </td>
                             <td>
-                                <code class="text-dark"><?= esc($p['sku']) ?></code>
+                                <code class="text-dark"><?= esc($p['ean13']) ?></code>
                             </td>
                             <td>
                                 <span class="fw-semibold text-success">₱<?= number_format($p['price'], 2) ?></span>
@@ -254,7 +244,42 @@
     </div>
 </div>
 
+<!-- Product Detail Modal -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productDetailModalLabel">
+                    <i class="bi bi-box-seam me-2"></i>Product Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="productDetailContent">
+                    <!-- Content will be loaded here -->
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Loading product details...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>Close
+                </button>
+                <button type="button" class="btn btn-primary" id="editProductBtn" onclick="editCurrentProduct()">
+                    <i class="bi bi-pencil me-1"></i>Edit Product
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+let currentProductId = null;
+
 function refreshProducts() {
     location.reload();
 }
@@ -284,6 +309,158 @@ function applyFilters() {
     window.location.href = url;
 }
 
+function editProduct(productId) {
+    window.location.href = '<?= base_url('products/edit/') ?>' + productId;
+}
+
+function editCurrentProduct() {
+    if (currentProductId) {
+        editProduct(currentProductId);
+    }
+}
+
+function showProductDetails(productId) {
+    currentProductId = productId;
+    const modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+    
+    // Reset modal content
+    document.getElementById('productDetailContent').innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading product details...</p>
+        </div>
+    `;
+    
+    modal.show();
+    
+    // Try using window.location.origin to construct the URL
+    const fetchUrl = `${window.location.origin}/DigiHub/products/getProductDetails/${productId}`;
+    console.log('Fetching from URL:', fetchUrl);
+    
+    // Fetch product details with additional headers
+    fetch(fetchUrl, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin'
+    })
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                displayProductDetails(data.product);
+            } else {
+                document.getElementById('productDetailContent').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Error loading product details: ${data.message || 'Unknown error'}
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error Details:', error);
+            document.getElementById('productDetailContent').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Network Error:</strong> ${error.message}
+                    <br><small>URL attempted: ${fetchUrl}</small>
+                </div>
+            `;
+        });
+}
+
+function displayProductDetails(product) {
+    console.log('Displaying product:', product);
+    
+    const shelfLocation = (product.shelf_id && product.loc_descrip)
+        ? `<i class="bi bi-geo-alt-fill text-primary me-1"></i>${product.shelf_id} - ${product.loc_descrip}`
+        : '<i class="bi bi-question-circle text-muted me-1"></i>Not assigned';
+    
+    const stockBadge = product.quantity == 0 
+        ? '<span class="badge bg-danger">Out of Stock</span>'
+        : product.quantity <= 5 
+        ? `<span class="badge bg-warning">${product.quantity} Low Stock</span>`
+        : `<span class="badge bg-success">${product.quantity} In Stock</span>`;
+    
+    const content = `
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Product Name:</strong></div>
+                    <div class="col-sm-8">${product.product_name || 'N/A'}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>EAN-13 Barcode:</strong></div>
+                    <div class="col-sm-8"><code class="text-dark">${product.ean13 || 'N/A'}</code></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Category:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-info">${product.category_name || 'N/A'}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Shelf Location:</strong></div>
+                    <div class="col-sm-8">${shelfLocation}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Product Type:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge ${product.product_type == 'digital' ? 'bg-success' : 'bg-warning'}">
+                            <i class="bi bi-${product.product_type == 'digital' ? 'cloud' : 'box'} me-1"></i>
+                            ${product.product_type ? product.product_type.charAt(0).toUpperCase() + product.product_type.slice(1) : 'N/A'}
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Price:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="fw-bold text-success">₱${product.price ? parseFloat(product.price).toLocaleString('en-PH', {minimumFractionDigits: 2}) : '0.00'}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Current Stock:</strong></div>
+                    <div class="col-sm-8">${stockBadge}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Total Value:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="fw-bold text-primary">₱${((parseFloat(product.price || 0) * parseInt(product.quantity || 0))).toLocaleString('en-PH', {minimumFractionDigits: 2})}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="display-1 mb-3">
+                            <i class="bi bi-box-seam text-muted"></i>
+                        </div>
+                        <h6 class="card-title">${product.product_name || 'Unknown Product'}</h6>
+                        <p class="card-text">
+                            <small class="text-muted">ID: ${product.id || 'N/A'}</small>
+                        </p>
+                        ${stockBadge}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('productDetailContent').innerHTML = content;
+}
+
 // Auto-apply filters when dropdowns change
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Bootstrap tooltips
@@ -302,6 +479,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Enter') {
             performSearch();
         }
+    });
+    
+    // Add click event listeners to product rows
+    document.querySelectorAll('.product-row').forEach(row => {
+        row.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            showProductDetails(productId);
+        });
+        
+        // Add hover effect
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
     });
     
     // Add hover animations to pagination links

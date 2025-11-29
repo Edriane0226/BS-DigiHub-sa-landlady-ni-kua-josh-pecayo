@@ -32,12 +32,12 @@
                     
                     <div class="row align-items-end mb-3">
                         <div class="col-md-8">
-                            <label for="barcode" class="form-label required">Barcode/SKU/EAN-13</label>
+                            <label for="barcode" class="form-label required">Barcode/EAN-13</label>
                             <input type="text" 
                                    name="barcode" 
                                    id="barcode"
                                    class="form-control form-control-lg" 
-                                   placeholder="Scan or enter barcode, SKU, or EAN-13"
+                                   placeholder="Scan or enter barcode or EAN-13"
                                    required
                                    autofocus>
                         </div>
@@ -50,7 +50,7 @@
                     
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="quantity" class="form-label required">Quantity</label>
+                            <label for="quantity" class="form-label required">Quantity to Add</label>
                             <input type="number" 
                                    name="quantity" 
                                    id="quantity"
@@ -186,6 +186,15 @@
                                 <i class="bi bi-exclamation-triangle"></i> Product not found. Please fill in the details to create a new product.
                             </div>
                             
+                            <!-- Display the EAN-13 that will be saved -->
+                            <div class="alert alert-info mb-3">
+                                <i class="bi bi-upc-scan me-1"></i>
+                                <strong>EAN-13 Barcode:</strong> <span id="display_ean13" class="text-monospace"></span>
+                            </div>
+                            
+                            <!-- Hidden field to store the scanned barcode -->
+                            <input type="hidden" name="ean13" id="hidden_ean13" value="">
+                            
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label for="product_name" class="form-label required">Product Name</label>
@@ -270,6 +279,24 @@
                                 </div>
                             </div>
                             
+                            <!-- Shelf Location Selection -->
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="shelf_location_id" class="form-label">Shelf Location</label>
+                                    <select name="shelf_location_id" id="shelf_location_id" class="form-select">
+                                        <option value="">-- Select Shelf Location --</option>
+                                        <?php if (isset($shelf_locations)): ?>
+                                            <?php foreach($shelf_locations as $id => $location): ?>
+                                            <option value="<?= $id ?>">
+                                                <?= esc($location) ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                    <div class="form-text">Optional: Assign product to a shelf location for inventory management</div>
+                                </div>
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label for="product_type" class="form-label required">Product Type</label>
@@ -320,7 +347,7 @@
             </div>
             <div class="card-body">
                 <ol class="mb-0">
-                    <li><strong>Scan or enter</strong> the product barcode, SKU, or EAN-13</li>
+                    <li><strong>Scan or enter</strong> the product barcode or EAN-13</li>
                     <li><strong>Click lookup</strong> to check if product exists</li>
                     <li><strong>Enter quantity</strong> to add to stock</li>
                     <li><strong>Fill product details</strong> if it's a new item</li>
@@ -521,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('lookupProduct called with barcode:', barcode);
         
         if (!barcode) {
-            alert('Please enter a barcode/SKU');
+            alert('Please enter a barcode/EAN-13');
             return;
         }
         
@@ -621,6 +648,21 @@ document.addEventListener('DOMContentLoaded', function() {
     function showNewProductForm() {
         existingProductInfo.style.display = 'none';
         newProductForm.style.display = 'block';
+        
+        // Populate the hidden EAN-13 field and display with the scanned barcode
+        const barcodeValue = barcodeInput.value.trim();
+        const hiddenEan13 = document.getElementById('hidden_ean13');
+        const displayEan13 = document.getElementById('display_ean13');
+        
+        if (hiddenEan13 && barcodeValue) {
+            hiddenEan13.value = barcodeValue;
+            console.log('Set hidden EAN-13 field to:', barcodeValue);
+        }
+        
+        if (displayEan13 && barcodeValue) {
+            displayEan13.textContent = barcodeValue;
+            console.log('Set display EAN-13 to:', barcodeValue);
+        }
         
         // Make required fields required
         document.getElementById('product_name').required = true;

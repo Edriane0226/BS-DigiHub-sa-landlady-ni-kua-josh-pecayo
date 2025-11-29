@@ -11,7 +11,7 @@ class StockOutModel extends Model
     
     public function getStockOutWithProduct($limit = null)
     {
-        $builder = $this->select('stock_out.*, products.product_name, products.sku')
+        $builder = $this->select('stock_out.*, products.product_name, products.ean13')
                         ->join('products', 'products.id = stock_out.product_id')
                         ->orderBy('stock_out.date_out', 'DESC');
         

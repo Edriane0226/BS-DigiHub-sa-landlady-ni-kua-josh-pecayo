@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ProductModel;
 use App\Models\CategoryModel;
+use App\Models\ShelfLocationModel;
 use App\Models\ProductCompatibilityModel;
 use App\Models\CarModel as CarModelModel;
 
@@ -11,6 +12,7 @@ class Products extends BaseController
 {
     protected $productModel;
     protected $categoryModel;
+    protected $shelfLocationModel;
     protected $compatModel;
     protected $carModel;
 
@@ -18,13 +20,14 @@ class Products extends BaseController
     {
         $this->productModel = new ProductModel();
         $this->categoryModel = new CategoryModel();
+        $this->shelfLocationModel = new ShelfLocationModel();
         $this->compatModel = new ProductCompatibilityModel();
         $this->carModel = new CarModelModel();
     }
 
     public function index()
     {
-        $query = $this->productModel->withCategory();
+        $query = $this->productModel->withCategoryAndShelf();
         
         // Handle filters
         $filters = [
@@ -38,7 +41,6 @@ class Products extends BaseController
         if (!empty($filters['search'])) {
             $query->groupStart()
                   ->like('products.product_name', $filters['search'])
-                  ->orLike('products.sku', $filters['search'])
                   ->orLike('products.ean13', $filters['search'])
                   ->groupEnd();
         }
@@ -107,6 +109,7 @@ class Products extends BaseController
                 'Stock In' => null
             ],
             'categories' => $this->categoryModel->findAll(),
+            'shelf_locations' => $this->shelfLocationModel->getForDropdown(),
             'car_models' => $this->carModel->findAll()
         ];
         
@@ -186,9 +189,8 @@ class Products extends BaseController
             $carModelIds = (array)($post['car_model_id'] ?? []);
         }
         
-        // Check if product exists by SKU/barcode
-        $product = $this->productModel->where('sku', $barcode)
-                                      ->orWhere('ean13', $barcode)
+        // Check if product exists by EAN-13/barcode
+        $product = $this->productModel->where('ean13', $barcode)
                                       ->first();
         
         if ($product) {
@@ -243,9 +245,10 @@ class Products extends BaseController
             
             $productId = $this->productModel->insert([
                 'product_name' => $post['product_name'],
+                'ean13' => $barcode, // Add the EAN-13 barcode
                 'category_id' => $categoryId,
+                'shelf_location_id' => $post['shelf_location_id'] ?? null,
                 'product_type' => $post['product_type'],
-                'sku' => $barcode,
                 'price' => $post['price'],
                 'quantity' => $post['quantity'],
             ]);
@@ -289,7 +292,7 @@ class Products extends BaseController
             return redirect()->back()->with('error', 'Quantity must be greater than 0');
         }
         
-        $product = $this->productModel->where('sku', $barcode)
+        $product = $this->productModel->where('ean13', $barcode)
                                       ->orWhere('ean13', $barcode)
                                       ->first();
         
@@ -338,10 +341,7 @@ class Products extends BaseController
         try {
             $product = $this->productModel->select('products.*, categories.category_name')
                                            ->join('categories', 'categories.id = products.category_id', 'left')
-                                           ->groupStart()
-                                           ->where('products.sku', $barcode)
-                                           ->orWhere('products.ean13', $barcode)
-                                           ->groupEnd()
+                                           ->where('products.ean13', $barcode)
                                            ->first();
             
             log_message('debug', 'Product lookup result: ' . json_encode($product));
@@ -381,6 +381,7 @@ class Products extends BaseController
             ],
             'product' => $product,
             'categories' => $this->categoryModel->findAll(),
+            'shelf_locations' => $this->shelfLocationModel->getForDropdown(),
             'compatibilities' => $this->compatModel->getCompatibilityForProduct($id),
             'car_models' => $this->carModel->findAll()
         ];
@@ -393,9 +394,10 @@ class Products extends BaseController
         $post = $this->request->getPost();
         $this->productModel->update($id, [
             'product_name' => $post['product_name'],
+            'ean13' => $post['ean13'] ?? null,
             'category_id' => $post['category_id'] ?? null,
+            'shelf_location_id' => $post['shelf_location_id'] ?? null,
             'product_type' => $post['product_type'],
-            'sku' => $post['sku'] ?? null,
             'price' => $post['price'],
             'quantity' => $post['quantity'] ?? 0,
         ]);
@@ -418,5 +420,79 @@ class Products extends BaseController
     {
         $this->productModel->delete($id);
         return redirect()->to('/products')->with('success', 'Product deleted');
+    }
+
+    public function getProductDetails($id)
+    {
+        // Set proper headers for JSON response
+        $this->response->setContentType('application/json');
+        
+        try {
+            // Log the request for debugging
+            log_message('info', 'getProductDetails called with ID: ' . $id);
+            
+            // Validate ID is numeric
+            if (!is_numeric($id)) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Invalid product ID'
+                ]);
+            }
+            
+            // First get the basic product
+            $product = $this->productModel->find($id);
+            
+            if (!$product) {
+                log_message('warning', 'Product not found with ID: ' . $id);
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Product not found'
+                ]);
+            }
+
+            log_message('info', 'Product found: ' . json_encode($product));
+
+            // Get category name if category_id exists
+            if (!empty($product['category_id'])) {
+                $category = $this->categoryModel->find($product['category_id']);
+                $product['category_name'] = $category ? $category['category_name'] : null;
+                log_message('info', 'Category found: ' . ($category ? $category['category_name'] : 'None'));
+            } else {
+                $product['category_name'] = null;
+            }
+
+            // Get shelf location if shelf_location_id exists
+            if (!empty($product['shelf_location_id'])) {
+                $shelfLocation = $this->shelfLocationModel->find($product['shelf_location_id']);
+                if ($shelfLocation) {
+                    $product['shelf_id'] = $shelfLocation['shelf_id'];
+                    $product['loc_descrip'] = $shelfLocation['loc_descrip'];
+                    log_message('info', 'Shelf location found: ' . $shelfLocation['shelf_id']);
+                } else {
+                    $product['shelf_id'] = null;
+                    $product['loc_descrip'] = null;
+                    log_message('info', 'No shelf location found');
+                }
+            } else {
+                $product['shelf_id'] = null;
+                $product['loc_descrip'] = null;
+                log_message('info', 'No shelf_location_id');
+            }
+
+            log_message('info', 'Returning product data: ' . json_encode($product));
+
+            return $this->response->setJSON([
+                'success' => true,
+                'product' => $product
+            ]);
+            
+        } catch (\Exception $e) {
+            log_message('error', 'Error in getProductDetails: ' . $e->getMessage());
+            log_message('error', 'Stack trace: ' . $e->getTraceAsString());
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Error retrieving product details: ' . $e->getMessage()
+            ]);
+        }
     }
 }

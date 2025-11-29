@@ -11,7 +11,7 @@ class StockInModel extends Model
     
     public function getStockInWithProduct($limit = null)
     {
-        $builder = $this->select('stock_in.*, products.product_name, products.sku')
+        $builder = $this->select('stock_in.*, products.product_name, products.ean13')
                         ->join('products', 'products.id = stock_in.product_id')
                         ->orderBy('stock_in.date_received', 'DESC');
         

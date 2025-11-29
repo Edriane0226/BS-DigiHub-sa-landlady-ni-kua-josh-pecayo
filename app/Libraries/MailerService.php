@@ -79,16 +79,16 @@ class MailerService
     private function setOutOfStockContent($products)
     {
         $this->mail->isHTML(true);
-        $this->mail->Subject = '🚨 URGENT: Out of Stock Alert - BS DIGIHUB';
+        $this->mail->Subject = ' Out of Stock Alert - BS DIGIHUB';
         
         $html = $this->getEmailHeader();
-        $html .= '<h2 style="color: #dc3545; margin-bottom: 20px;">⚠️ OUT OF STOCK ALERT</h2>';
+        $html .= '<h2 style="color: #212529; margin-bottom: 20px;">OUT OF STOCK ALERT</h2>';
         $html .= '<p style="font-size: 16px; margin-bottom: 20px;">The following products are completely out of stock and require immediate attention:</p>';
         
         $html .= '<table style="width: 100%; border-collapse: collapse; margin: 20px 0;">';
-        $html .= '<thead><tr style="background-color: #dc3545; color: white;">';
+        $html .= '<thead><tr style="background-color: #ddd; color: white;">';
         $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Product Name</th>';
-        $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">SKU</th>';
+        $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">EAN-13</th>';
         $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Category</th>';
         $html .= '<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Stock</th>';
         $html .= '</tr></thead><tbody>';
@@ -96,7 +96,7 @@ class MailerService
         foreach ($products as $product) {
             $html .= '<tr style="border-bottom: 1px solid #ddd;">';
             $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['product_name']) . '</td>';
-            $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['sku']) . '</td>';
+            $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['ean13']) . '</td>';
             $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['category_name'] ?? 'Uncategorized') . '</td>';
             $html .= '<td style="padding: 10px; text-align: center; border: 1px solid #ddd; color: #dc3545; font-weight: bold;">0</td>';
             $html .= '</tr>';
@@ -122,7 +122,7 @@ class MailerService
         $html .= '<table style="width: 100%; border-collapse: collapse; margin: 20px 0;">';
         $html .= '<thead><tr style="background-color: #ddd; color: #212529;">';
         $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Product Name</th>';
-        $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">SKU</th>';
+        $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">EAN-13</th>';
         $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Category</th>';
         $html .= '<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Current Stock</th>';
         $html .= '</tr></thead><tbody>';
@@ -130,7 +130,7 @@ class MailerService
         foreach ($products as $product) {
             $html .= '<tr style="border-bottom: 1px solid #ddd;">';
             $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['product_name']) . '</td>';
-            $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['sku']) . '</td>';
+            $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['ean13']) . '</td>';
             $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['category_name'] ?? 'Uncategorized') . '</td>';
             $html .= '<td style="padding: 10px; text-align: center; border: 1px solid #ddd; color: #ffc107; font-weight: bold;">' . $product['quantity'] . '</td>';
             $html .= '</tr>';
@@ -191,7 +191,7 @@ class MailerService
         $html = '<table style="width: 100%; border-collapse: collapse; margin: 20px 0;">';
         $html .= '<thead><tr style="background-color: ' . $headerColor . '; color: white;">';
         $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Product Name</th>';
-        $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">SKU</th>';
+        $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">EAN-13</th>';
         $html .= '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Category</th>';
         $html .= '<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Stock</th>';
         $html .= '</tr></thead><tbody>';
@@ -199,7 +199,7 @@ class MailerService
         foreach ($products as $product) {
             $html .= '<tr style="border-bottom: 1px solid #ddd;">';
             $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['product_name']) . '</td>';
-            $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['sku']) . '</td>';
+            $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['ean13']) . '</td>';
             $html .= '<td style="padding: 10px; border: 1px solid #ddd;">' . htmlspecialchars($product['category_name'] ?? 'Uncategorized') . '</td>';
             $html .= '<td style="padding: 10px; text-align: center; border: 1px solid #ddd; color: #ddd; font-weight: bold;">' . $product['quantity'] . '</td>';
             $html .= '</tr>';

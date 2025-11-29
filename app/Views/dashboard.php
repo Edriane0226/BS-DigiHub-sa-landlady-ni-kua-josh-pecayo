@@ -128,7 +128,7 @@
                                     <tr>
                                         <td>
                                             <h6 class="mb-0"><?= esc($product['product_name']) ?></h6>
-                                            <small class="text-muted">SKU: <?= esc($product['sku'] ?? 'N/A') ?></small>
+                                            <small class="text-muted">EAN-13: <?= esc($product['ean13'] ?? 'N/A') ?></small>
                                         </td>
                                         <td><?= esc($product['category_name'] ?? 'Uncategorized') ?></td>
                                         <td>

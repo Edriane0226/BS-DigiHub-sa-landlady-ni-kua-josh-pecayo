@@ -32,12 +32,12 @@
                     
                     <div class="row align-items-end mb-3">
                         <div class="col-md-8">
-                            <label for="barcode" class="form-label required">Barcode/SKU/EAN-13</label>
+                            <label for="barcode" class="form-label required">Barcode/EAN-13</label>
                             <input type="text" 
                                    name="barcode" 
                                    id="barcode"
                                    class="form-control form-control-lg" 
-                                   placeholder="Scan or enter barcode, SKU, or EAN-13"
+                                   placeholder="Scan or enter barcode or EAN-13"
                                    required
                                    autofocus>
                         </div>
@@ -119,7 +119,7 @@
             </div>
             <div class="card-body">
                 <ol class="mb-0">
-                    <li><strong>Scan or enter</strong> the product barcode, SKU, or EAN-13</li>
+                    <li><strong>Scan or enter</strong> the product barcode or EAN-13</li>
                     <li><strong>Click lookup</strong> to verify product</li>
                     <li><strong>Enter quantity</strong> to remove</li>
                     <li><strong>Select reason</strong> for removal</li>
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function lookupProduct() {
         const barcode = barcodeInput.value.trim();
         if (!barcode) {
-            alert('Please enter a barcode/SKU');
+            alert('Please enter a barcode/EAN-13');
             return;
         }
         

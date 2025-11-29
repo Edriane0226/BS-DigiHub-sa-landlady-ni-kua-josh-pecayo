@@ -19,6 +19,7 @@ $routes->post('products/stock-in', 'Products::processStockIn');
 $routes->get('products/stock-out', 'Products::stockOut');
 $routes->post('products/stock-out', 'Products::processStockOut');
 $routes->get('products/barcode', 'Products::getProductByBarcode');
+$routes->get('products/getProductDetails/(:num)', 'Products::getProductDetails/$1');
 $routes->get('products/test', function() {
     return 'Test endpoint working!';
 });

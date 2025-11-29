@@ -47,13 +47,13 @@
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="sku" class="form-label">SKU</label>
+                                    <label for="ean13" class="form-label">EAN-13</label>
                                     <input type="text" 
-                                           name="sku" 
-                                           id="sku"
-                                           class="form-control" 
-                                           value="<?= old('sku', $product['sku']) ?>"
-                                           placeholder="Enter SKU">
+                                           name="ean13" 
+                                           id="ean13"
+                                           class="form-control"
+                                           value="<?= old('ean13', $product['ean13']) ?>"
+                                           placeholder="Enter EAN-13 barcode">
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
@@ -74,7 +74,7 @@
                             </div>
                             
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="category_id" class="form-label">Category</label>
                                     <select name="category_id" id="category_id" class="form-select">
                                         <option value="">-- Select Category --</option>
@@ -88,8 +88,23 @@
                                         <?php endif; ?>
                                     </select>
                                 </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="shelf_location_id" class="form-label">Shelf Location</label>
+                                    <select name="shelf_location_id" id="shelf_location_id" class="form-select">
+                                        <option value="">-- Select Shelf Location --</option>
+                                        <?php if (isset($shelf_locations)): ?>
+                                            <?php foreach($shelf_locations as $id => $location): ?>
+                                            <option value="<?= $id ?>" 
+                                                    <?= $product['shelf_location_id'] == $id ? 'selected' : '' ?>>
+                                                <?= esc($location) ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
                                 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="product_type" class="form-label required">Product Type</label>
                                     <select name="product_type" id="product_type" class="form-select" required>
                                         <option value="physical" <?= $product['product_type'] == 'physical' ? 'selected' : '' ?>>
@@ -142,10 +157,10 @@
                             <label for="car_model_id" class="form-label">Add Car Model Compatibility</label>
                             <select name="car_model_id[]" id="car_model_id" class="form-select" multiple>
                                 <?php if (isset($car_models)): ?>
-                                    <?php foreach($car_models as $model): ?>
-                                        <option value="<?= $model['id'] ?>">
-                                            <?= esc($model['brand']) ?> <?= esc($model['model']) ?> 
-                                            (<?= $model['year_start'] ?>-<?= $model['year_end'] ?: 'Present' ?>)
+                                    <?php foreach($car_models as $carModel): ?>
+                                        <option value="<?= $carModel['id'] ?>">
+                                            <?= esc($carModel['brand'] ?? '') ?> <?= esc($carModel['model'] ?? '') ?> 
+                                            (<?= $carModel['year_start'] ?? '' ?>-<?= $carModel['year_end'] ?? 'Present' ?>)
                                         </option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -169,10 +184,10 @@
                             <div class="col-md-6 mb-2">
                                 <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
                                     <span>
-                                        <strong><?= esc($compat['brand']) ?> <?= esc($compat['model']) ?></strong>
+                                        <strong><?= esc($compat['brand'] ?? '') ?> <?= esc($compat['model'] ?? '') ?></strong>
                                         <br>
                                         <small class="text-muted">
-                                            <?= $compat['year_start'] ?>-<?= $compat['year_end'] ?: 'Present' ?>
+                                            <?= $compat['year_start'] ?? '' ?>-<?= $compat['year_end'] ?? 'Present' ?>
                                         </small>
                                     </span>
                                     <a href="<?= site_url('/compatibility/remove/' . $compat['id']) ?>" 
@@ -206,8 +221,21 @@
                 </div>
                 
                 <div class="mb-3">
-                    <small class="text-muted">SKU</small>
-                    <div class="fw-semibold"><?= esc($product['sku']) ?: 'Not set' ?></div>
+                    <small class="text-muted">EAN-13</small>
+                    <div class="fw-semibold"><?= esc($product['ean13']) ?: 'Not set' ?></div>
+                </div>
+                
+                <div class="mb-3">
+                    <small class="text-muted">Shelf Location</small>
+                    <div class="fw-semibold">
+                        <?php
+                        $shelfDisplay = 'Not assigned';
+                        if (isset($shelf_locations) && !empty($product['shelf_location_id'])) {
+                            $shelfDisplay = $shelf_locations[$product['shelf_location_id']] ?? 'Not assigned';
+                        }
+                        echo esc($shelfDisplay);
+                        ?>
+                    </div>
                 </div>
                 
                 <div class="mb-3">
