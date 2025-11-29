@@ -202,6 +202,11 @@ class Products extends BaseController
                 $updateData['category_id'] = $categoryId; // null for 'none' option
             }
             
+            // Update shelf location if provided
+            if (isset($post['shelf_location_id'])) {
+                $updateData['shelf_location_id'] = !empty($post['shelf_location_id']) ? $post['shelf_location_id'] : null;
+            }
+            
             $this->productModel->update($product['id'], $updateData);
             
             // Handle car compatibility for existing product
@@ -227,6 +232,13 @@ class Products extends BaseController
             $message = 'Stock updated for ' . $product['product_name'];
             if (!empty($post['category_option']) && $post['category_option'] === 'new') {
                 $message .= '. New category "' . $post['new_category_name'] . '" created and assigned.';
+            }
+            if (isset($post['shelf_location_id']) && !empty($post['shelf_location_id'])) {
+                // Get shelf location name for message
+                $shelfLocation = $this->shelfLocationModel->find($post['shelf_location_id']);
+                if ($shelfLocation) {
+                    $message .= '. Shelf location updated to "' . $shelfLocation['loc_descrip'] . '".';
+                }
             }
             
             return redirect()->to('/products/stock-in')->with('success', $message);
@@ -339,8 +351,9 @@ class Products extends BaseController
         }
         
         try {
-            $product = $this->productModel->select('products.*, categories.category_name')
+            $product = $this->productModel->select('products.*, categories.category_name, shelf_locations.loc_descrip as shelf_location')
                                            ->join('categories', 'categories.id = products.category_id', 'left')
+                                           ->join('shelf_locations', 'shelf_locations.id = products.shelf_location_id', 'left')
                                            ->where('products.ean13', $barcode)
                                            ->first();
             

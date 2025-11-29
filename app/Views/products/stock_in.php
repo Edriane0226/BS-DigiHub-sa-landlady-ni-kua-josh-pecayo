@@ -61,6 +61,36 @@
                         </div>
                     </div>
                     
+                    <!-- Shelf Location Section (always available) -->
+                    <div class="mt-3 mb-3">
+                        <hr>
+                        <h6 class="text-warning">
+                            Shelf Location (Optional)
+                        </h6>
+                        <p class="small text-muted">Assign or update the shelf location for this product</p>
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="shelf_location_id" class="form-label">Shelf Location</label>
+                                <select name="shelf_location_id" id="shelf_location_id" class="form-select">
+                                    <option value="">-- No Shelf Location --</option>
+                                    <?php if (isset($shelf_locations)): ?>
+                                        <?php foreach($shelf_locations as $id => $location): ?>
+                                        <option value="<?= $id ?>">
+                                            <?= esc($location) ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i> 
+                                    For existing products, this will update the current shelf location. 
+                                    For new products, this will assign the initial location.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Car Compatibility Section (always available) -->
                     <div class="mt-4">
                         <hr>
@@ -167,7 +197,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <strong>Current Stock:</strong> <span id="existingProductStock" class="badge bg-info"></span><br>
-                                    <strong>Price:</strong> ₱<span id="existingProductPrice"></span>
+                                    <strong>Price:</strong> ₱<span id="existingProductPrice"></span><br>
+                                    <strong>Shelf Location:</strong> <span id="existingProductShelf"></span>
                                 </div>
                             </div>
                             <div class="row mt-2" id="compatibilityRow" style="display: none;">
@@ -175,6 +206,14 @@
                                     <strong>Compatible Cars:</strong> 
                                     <div id="existingCompatibilities" class="mt-1">
                                         <!-- Compatibility badges will be inserted here -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <div class="alert alert-light mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <small>You can update the shelf location below when adding stock to this existing product.</small>
                                     </div>
                                 </div>
                             </div>
@@ -276,24 +315,6 @@
                                             <i class="bi bi-info-circle"></i> This product will be added without a category. You can assign a category later from the product list.
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Shelf Location Selection -->
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="shelf_location_id" class="form-label">Shelf Location</label>
-                                    <select name="shelf_location_id" id="shelf_location_id" class="form-select">
-                                        <option value="">-- Select Shelf Location --</option>
-                                        <?php if (isset($shelf_locations)): ?>
-                                            <?php foreach($shelf_locations as $id => $location): ?>
-                                            <option value="<?= $id ?>">
-                                                <?= esc($location) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                    <div class="form-text">Optional: Assign product to a shelf location for inventory management</div>
                                 </div>
                             </div>
                             
@@ -612,16 +633,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const ean13El = document.getElementById('existingProductEAN13');
         const stockEl = document.getElementById('existingProductStock');
         const priceEl = document.getElementById('existingProductPrice');
+        const shelfEl = document.getElementById('existingProductShelf');
         const compatibilityRow = document.getElementById('compatibilityRow');
         const compatibilitiesEl = document.getElementById('existingCompatibilities');
+        const shelfLocationSelect = document.getElementById('shelf_location_id');
         
-        console.log('Elements found:', {nameEl, categoryEl, ean13El, stockEl, priceEl, compatibilityRow, compatibilitiesEl});
+        console.log('Elements found:', {nameEl, categoryEl, ean13El, stockEl, priceEl, shelfEl, compatibilityRow, compatibilitiesEl});
         
         if (nameEl) nameEl.textContent = product.product_name;
         if (categoryEl) categoryEl.textContent = product.category_name || 'Uncategorized';
         if (ean13El) ean13El.textContent = product.ean13 || 'Not set';
         if (stockEl) stockEl.textContent = product.quantity + ' units';
         if (priceEl) priceEl.textContent = parseFloat(product.price).toFixed(2);
+        if (shelfEl) shelfEl.textContent = product.shelf_location || 'Not assigned';
+        
+        // Pre-populate shelf location dropdown if product has one assigned
+        if (shelfLocationSelect && product.shelf_location_id) {
+            shelfLocationSelect.value = product.shelf_location_id;
+        }
         
         // Display existing compatibilities
         if (product.compatibilities && product.compatibilities.length > 0) {
@@ -675,6 +704,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset only the input fields, keep product information visible
         document.getElementById('barcode').value = '';
         document.getElementById('quantity').value = '1';
+        
+        // Reset shelf location dropdown
+        const shelfLocationField = document.getElementById('shelf_location_id');
+        if (shelfLocationField) shelfLocationField.value = '';
         
         // Reset new product form fields if they exist
         const productNameField = document.getElementById('product_name');
